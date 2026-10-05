@@ -1,32 +1,26 @@
-<!-- ═══════════════ HEADER ═══════════════ -->
+<!-- ═══════════════ CAREER CONTROL TOWER · REPOSITORY · PM ═══════════════ -->
 <div align="center">
 
-![Header](https://capsule-render.vercel.app/api?type=waving&color=0:0A1F44,50:1a3a6b,100:C9A227&height=200&section=header&text=Product%20Management%20Case%20Studies&fontSize=40&fontColor=ffffff&animation=fadeIn&desc=7%20Case%20Studies%20%E2%80%A2%20User%20Research%20%E2%80%A2%20Strategy%20%E2%80%A2%20Prioritization%20%E2%80%A2%20Unit%20Economics&descSize=15&descAlignY=78)
+<img src="https://raw.githubusercontent.com/Eswar5313/Eswar5313/main/assets/headers/REPO_PM.svg" width="100%" alt="Product Management Case Studies — Eswar Mahalingam" />
 
-[![Typing SVG](https://readme-typing-svg.herokuapp.com?font=IBM+Plex+Mono&size=20&duration=3000&pause=800&color=C9A227&center=true&vCenter=true&width=700&lines=Real+frameworks+applied+to+real+products;RICE+%E2%80%A2+Five+Forces+%E2%80%A2+TAM%2FSAM%2FSOM+%E2%80%A2+JTBD+%E2%80%A2+STP;Every+case%3A+PDF+%2B+deck+%2B+Excel+workbook+with+live+formulas)](https://git.io/typing-svg)
+<a href="https://github.com/Eswar5313"><img src="https://img.shields.io/badge/⬅-CAREER_CONTROL_TOWER-000000?style=for-the-badge&labelColor=FFFFFF" alt="CAREER CONTROL TOWER"/></a> <a href="https://eswar5313.github.io/Eswar-Master-Project-Portfolio-2026/"><img src="https://img.shields.io/badge/✦-MASTER_PORTFOLIO-000000?style=for-the-badge&labelColor=C9CDD6" alt="MASTER PORTFOLIO"/></a> <a href="https://eswar5313.github.io/Eswar-Portfolio-Lens-Index-2026/"><img src="https://img.shields.io/badge/✦-LENS_INDEX-000000?style=for-the-badge&labelColor=FFFFFF" alt="LENS INDEX"/></a> <a href="https://eswar-pm-case-notes.netlify.app"><img src="https://img.shields.io/badge/✦-PM_CASE_NOTES_(LIVE)-000000?style=for-the-badge&labelColor=FFFFFF" alt="PM CASE NOTES (LIVE)"/></a> <a href="https://eswar5313.github.io/product-management-case-studies/"><img src="https://img.shields.io/badge/✦-CASE_DASHBOARD-000000?style=for-the-badge&labelColor=C9CDD6" alt="CASE DASHBOARD"/></a>
 
-![PM](https://img.shields.io/badge/Product_Strategy-0A1F44?style=for-the-badge&logo=target&logoColor=C9A227)
-![Research](https://img.shields.io/badge/User_Research-C9A227?style=for-the-badge&logo=googleanalytics&logoColor=0A1F44)
-![Excel](https://img.shields.io/badge/Excel_Models-217346?style=for-the-badge&logo=microsoftexcel&logoColor=white)
-![Figma](https://img.shields.io/badge/UX_Analysis-F24E1E?style=for-the-badge&logo=figma&logoColor=white)
+<img src="https://img.shields.io/badge/CASE_STUDIES-12-FFFFFF?style=for-the-badge&labelColor=000000" alt="CASE STUDIES: 12"/> <img src="https://img.shields.io/badge/FRAMEWORKS-20%2B-C9CDD6?style=for-the-badge&labelColor=000000" alt="FRAMEWORKS: 20+"/> <img src="https://img.shields.io/badge/LIVE_FORMULAS-3,000%2B-FFFFFF?style=for-the-badge&labelColor=000000" alt="LIVE FORMULAS: 3,000+"/> <img src="https://img.shields.io/badge/FABRICATED_USER_DATA-0-C9CDD6?style=for-the-badge&labelColor=000000" alt="FABRICATED USER DATA: 0"/>
 
-![Cases](https://img.shields.io/badge/Case_Studies-7-C9A227?style=for-the-badge)
-![Frameworks](https://img.shields.io/badge/Frameworks_Applied-15%2B-0A1F44?style=for-the-badge)
-![Formulas](https://img.shields.io/badge/Live_Excel_Formulas-400%2B-C9A227?style=for-the-badge)
+**AI-First Product Management cohort (Airtribe, 2026) + independent practice** · research · strategy · PRDs · metrics · PLG · system design — every decision calculated in a live-formula workbook, never asserted
 
 </div>
 
----
+<img src="https://raw.githubusercontent.com/Eswar5313/Eswar5313/main/assets/divider.svg" width="100%" alt="" />
 
 ## 🧭 What This Repo Is
 
-> **7 product management case studies** built during my **AI-First Product Management** cohort (Airtribe) and independent practice — covering **mobility, quick commerce, e-commerce UX, and B2B SaaS**. Each case applies named PM frameworks to a real product problem and ships as a **PDF report + presentation deck + Excel decision workbook with live formulas** — decisions are calculated, not asserted.
+> **12 product management case studies** built during my **AI-First Product Management** cohort (Airtribe) and independent practice — covering **mobility, quick commerce, e-commerce UX, B2B SaaS, fitness, food delivery, travel PLG and platform system design**. Each case applies named PM frameworks to a real product problem and ships as a **PDF report + presentation deck + Excel decision workbook with live formulas** — decisions are calculated, not asserted.
 
 **Non-fabrication standard:** no invented user quotes or usability data. Interview slots ship as real templates; any synthetic dataset is explicitly declared as such.
 
----
-
-## 📁 The 7 Case Studies
+<img src="https://raw.githubusercontent.com/Eswar5313/Eswar5313/main/assets/divider.svg" width="100%" alt="" />
+## 📁 The 12 Case Studies
 
 <details open>
 <summary>🚕 <b>01 — Uber: Pickup Coordination in Dense Areas</b></summary>
@@ -148,8 +142,92 @@
 
 </details>
 
----
+<details open>
+<summary>🏋️ <b>08 — VitaFit: PRD for Engagement & Retention Features</b></summary>
+<br>
 
+**Problem:** Users of an on-demand fitness platform lose motivation and feel no connection with instructors — design two features that lift repeat usage.
+
+| Component | What's Inside |
+|---|---|
+| 📄 PRD (8 pp) | Personas Drifter · Duo · Loyalist · 6 options + RICE · **F1 Squads & Streak Challenges** · **F2 Instructor Circles & Coach Notes** · NF-1–NF-10 · 8 edge cases |
+| 📈 Metrics | North Star = weekly active exercisers · **+15 % relative W4 retention** target via 50/50 8-week holdout · kill criteria per rollout stage |
+| 🗺️ Core flows | 6 flowcharts · 18 vector wireframes · streak & Coach-Note state models · 18-event analytics schema |
+| 📊 Workbook | 13 sheets · **1,503 live formulas** · declared-synthetic 120-member squad simulation |
+| 🔬 Research annex | 12-source register (Strava, Peloton, Duolingo, peer-reviewed studies) · 4 FigJam flow boards |
+
+**Frameworks:** PRD anatomy · RICE · metric tree · staged rollout with kill criteria
+
+</details>
+
+<details open>
+<summary>🍽️ <b>09 — Zomato: Funnel, Cohorts & North Star (Tier-1 cities)</b></summary>
+<br>
+
+**Problem:** Improve engagement and retention across Discovery → Order → Delivery.
+
+| Component | What's Inside |
+|---|---|
+| 🔻 Funnel | 7 stages, one hypothesis each · declared-synthetic weekly funnel **17.6 % → 26.4 %** delivered target · priority: cart→checkout and checkout→placed |
+| 👥 Cohorts | New vs repeat · high vs low frequency · discount vs full-price — retention challenge + hypothesis per cohort |
+| ⭐ North Star | On-promise delivered orders per monthly transacting customer (3.1 → 3.6) · 13 solutions each with input / output / leading / lagging / guardrail metrics · 4 KRs |
+| 💰 Unit economics | CAC ₹320 · contribution ₹36.8 / order · break-even 8.7 orders |
+| 📊 Workbook | 12 sheets · 163 live formulas · 0 errors |
+
+**Frameworks:** AARRR · North Star · metric ladders · OKRs · funnel & cohort analysis
+
+</details>
+
+<details open>
+<summary>🏡 <b>10 — Airbnb India: PLG Loops, MVPs & Revenue Model</b></summary>
+<br>
+
+**Problem:** Design product-led growth for Airbnb India after product-market fit — enablers, loops, MVPs and a monetisation model.
+
+| Component | What's Inside |
+|---|---|
+| 🔁 PLG | Expansion grid · cohort PMF scorecard · persona "Arjun the Group Planner" · enablers E1–E6 · loops L1–L6 · India flywheel · RICE roadmap |
+| 🧪 MVPs | Shared experiment contract + 4 MVPs — Trip Split · Host-in-15 + Guest→Host · Trip Recap + multilingual guides · Coins + long-weekend planner |
+| 💰 Revenue | Five-layer model R1–R5 (fees, Host Pro, Yatra Pass, sponsorship, partners/B2B) · FY29 scenario declared synthetic · assumption register + pre-mortem |
+| 📊 Workbook | 11 sheets · 177 live formulas · 0 errors · 10-slide deck · 42-pp master |
+
+**Frameworks:** PLG loops & flywheels · MVP / experiment design · RICE · revenue modelling
+
+</details>
+
+<details open>
+<summary>🛵 <b>11 — QuickBite: National-Rollout System Design Brief</b></summary>
+<br>
+
+**Problem:** As PM, take a food-delivery app from 5,000 users / ~40 restaurants to 2 M users in 12 months — what must the system become?
+
+| Component | What's Inside |
+|---|---|
+| 🧱 Design brief | Requirements · data model · architecture · request flow · statefulness · performance vs consistency · incident drill · executive summary (2,499 words) |
+| 📐 Traffic model | ~40k orders/day, ~1.5 orders/s peak — status polls, tracking and rider pings dominate load |
+| 📊 Workbook | 12 sheets · 280 live formulas · NFR targets · component register · 10-slide deck · 34-pp master |
+
+**Frameworks:** client-server · APIs & status codes · databases & caching · NFRs · incident response
+
+</details>
+
+<details open>
+<summary>🎓 <b>12 — SkillBridge "Compass": Personalised Learning Recommendation System</b></summary>
+<br>
+
+**Problem:** Lift engagement (+25 %), completion (+30 %) and satisfaction (+20 %) on an online-education platform for learners, instructors and admins.
+
+| Component | What's Inside |
+|---|---|
+| 📝 Requirements | User stories · functional-requirements table · NFRs in 7 categories |
+| 🧠 System design | Core architecture + diagram · **trade-off: hybrid batch top-50 + real-time re-rank + event-triggered recompute** · assumptions & future scope |
+| 📊 Workbook | 12 sheets · 159 live formulas · 10-slide deck · 62-pp master |
+
+**Frameworks:** user stories · FR/NFR design · recommender architecture · trade-off analysis
+
+</details>
+
+<img src="https://raw.githubusercontent.com/Eswar5313/Eswar5313/main/assets/divider.svg" width="100%" alt="" />
 ## 🧰 Framework Toolbox Used Across Cases
 
 ```mermaid
@@ -177,8 +255,7 @@ mindmap
       CAGR reconciliation
 ```
 
----
-
+<img src="https://raw.githubusercontent.com/Eswar5313/Eswar5313/main/assets/divider.svg" width="100%" alt="" />
 ## 📦 Deliverable Standard (Every Case)
 
 | Deliverable | Format | Rule |
@@ -188,19 +265,19 @@ mindmap
 | 📈 **Decision Workbook** | XLSX + PDF | Live formulas, Excel Tables, pivots — every number traceable |
 | 🛡️ **Integrity Statement** | Inline | AI role disclosed · no fabricated user data · synthetic data declared |
 
----
+<img src="https://raw.githubusercontent.com/Eswar5313/Eswar5313/main/assets/divider.svg" width="100%" alt="" />
 
 <div align="center">
 
-## 👤 Author
+**Eswar Mahalingam** · B.Com · MBA · PGDLSCM · CSCMP SCPro · Six Sigma Black Belt
+Data Scientist @ Zidio Development · Ghaziabad NCR, India · Open to India · EU (Blue Card) · Gulf · Immediate joiner
 
-**Eswar Mahalingam** · MBA · CSCMP SCPro · Six Sigma Black Belt
-Data Analyst · AI-First Product Management (Airtribe) · Ghaziabad, India
+[![LinkedIn](https://img.shields.io/badge/✦-LINKEDIN-000000?style=for-the-badge&labelColor=C9CDD6)](https://linkedin.com/in/eswar-mahalingam)
+[![Email](https://img.shields.io/badge/✦-EMAIL-000000?style=for-the-badge&labelColor=FFFFFF)](mailto:eswarmba05313@gmail.com)
+[![Phone](https://img.shields.io/badge/✦-+91_9360548243-000000?style=for-the-badge&labelColor=C9CDD6)](tel:+919360548243)
+[![Portfolio](https://img.shields.io/badge/✦-PORTFOLIO_SITE-000000?style=for-the-badge&labelColor=FFFFFF)](https://eswar-3d-portfolio.netlify.app)
+[![Profile](https://img.shields.io/badge/⬅-CAREER_CONTROL_TOWER-000000?style=for-the-badge&labelColor=FFFFFF)](https://github.com/Eswar5313)
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/YOUR-LINKEDIN)
-[![Gmail](https://img.shields.io/badge/Gmail-EA4335?style=for-the-badge&logo=gmail&logoColor=white)](mailto:eswarmba05313@gmail.com)
-[![Profile](https://img.shields.io/badge/GitHub_Profile-0A1F44?style=for-the-badge&logo=github&logoColor=C9A227)](https://github.com/YOUR-USERNAME)
-
-![Footer](https://capsule-render.vercel.app/api?type=waving&color=0:C9A227,100:0A1F44&height=100&section=footer)
+<img src="https://raw.githubusercontent.com/Eswar5313/Eswar5313/main/assets/kailash-footer.svg" width="100%" alt="" />
 
 </div>
