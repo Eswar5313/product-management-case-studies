@@ -13,6 +13,10 @@
 
 <img src="https://raw.githubusercontent.com/Eswar5313/Eswar5313/main/assets/divider.svg" width="100%" alt="" />
 
+> 📘 **[Download the project book (PDF)](PM_Case_Book.pdf)** — cover + one summary sheet per project (12 sheets): what it is, verified results, deliverables, method, role fit and how to verify. Individual sheets: [`case-sheets/`](case-sheets/).
+
+
+
 ## 🧭 What This Repo Is
 
 > **12 product management case studies** built during my **AI-First Product Management** cohort (Airtribe) and independent practice — covering **mobility, quick commerce, e-commerce UX, B2B SaaS, fitness, food delivery, travel PLG and platform system design**. Each case applies named PM frameworks to a real product problem and ships as a **PDF report + presentation deck + Excel decision workbook with live formulas** — decisions are calculated, not asserted.
