@@ -3,9 +3,9 @@
 
 <img src="https://raw.githubusercontent.com/Eswar5313/Eswar5313/main/assets/headers/REPO_PM.svg" width="100%" alt="Product Management Case Studies — Eswar Mahalingam" />
 
-<a href="https://github.com/Eswar5313"><img src="https://img.shields.io/badge/⬅-CAREER_CONTROL_TOWER-000000?style=for-the-badge&labelColor=FFFFFF" alt="CAREER CONTROL TOWER"/></a> <a href="https://eswar5313.github.io/Eswar-Master-Project-Portfolio-2026/"><img src="https://img.shields.io/badge/✦-MASTER_PORTFOLIO-000000?style=for-the-badge&labelColor=C9CDD6" alt="MASTER PORTFOLIO"/></a> <a href="https://eswar5313.github.io/Eswar-Portfolio-Lens-Index-2026/"><img src="https://img.shields.io/badge/✦-LENS_INDEX-000000?style=for-the-badge&labelColor=FFFFFF" alt="LENS INDEX"/></a> <a href="https://eswar-pm-case-notes.netlify.app"><img src="https://img.shields.io/badge/✦-PM_CASE_NOTES_(LIVE)-000000?style=for-the-badge&labelColor=FFFFFF" alt="PM CASE NOTES (LIVE)"/></a> <a href="https://eswar5313.github.io/product-management-case-studies/"><img src="https://img.shields.io/badge/✦-CASE_DASHBOARD-000000?style=for-the-badge&labelColor=C9CDD6" alt="CASE DASHBOARD"/></a>
+<a href="https://github.com/Eswar5313"><img src="https://img.shields.io/badge/⬅-CAREER_CONTROL_TOWER-0B1026?style=for-the-badge&labelColor=00E5FF" alt="CAREER CONTROL TOWER"/></a> <a href="https://eswar5313.github.io/Eswar-Master-Project-Portfolio-2026/"><img src="https://img.shields.io/badge/✦-MASTER_PORTFOLIO-0B1026?style=for-the-badge&labelColor=B388FF" alt="MASTER PORTFOLIO"/></a> <a href="https://eswar5313.github.io/Eswar-Portfolio-Lens-Index-2026/"><img src="https://img.shields.io/badge/✦-LENS_INDEX-0B1026?style=for-the-badge&labelColor=00E5FF" alt="LENS INDEX"/></a> <a href="https://eswar-pm-case-notes.netlify.app"><img src="https://img.shields.io/badge/✦-PM_CASE_NOTES_(LIVE)-0B1026?style=for-the-badge&labelColor=00E5FF" alt="PM CASE NOTES (LIVE)"/></a> <a href="https://eswar5313.github.io/product-management-case-studies/"><img src="https://img.shields.io/badge/✦-CASE_DASHBOARD-0B1026?style=for-the-badge&labelColor=B388FF" alt="CASE DASHBOARD"/></a>
 
-<img src="https://img.shields.io/badge/CASE_STUDIES-12-FFFFFF?style=for-the-badge&labelColor=000000" alt="CASE STUDIES: 12"/> <img src="https://img.shields.io/badge/FRAMEWORKS-20%2B-C9CDD6?style=for-the-badge&labelColor=000000" alt="FRAMEWORKS: 20+"/> <img src="https://img.shields.io/badge/LIVE_FORMULAS-3,000%2B-FFFFFF?style=for-the-badge&labelColor=000000" alt="LIVE FORMULAS: 3,000+"/> <img src="https://img.shields.io/badge/FABRICATED_USER_DATA-0-C9CDD6?style=for-the-badge&labelColor=000000" alt="FABRICATED USER DATA: 0"/>
+<img src="https://img.shields.io/badge/CASE_STUDIES-12-00E5FF?style=for-the-badge&labelColor=0B1026" alt="CASE STUDIES: 12"/> <img src="https://img.shields.io/badge/FRAMEWORKS-20%2B-B388FF?style=for-the-badge&labelColor=0B1026" alt="FRAMEWORKS: 20+"/> <img src="https://img.shields.io/badge/LIVE_FORMULAS-3,000%2B-00E5FF?style=for-the-badge&labelColor=0B1026" alt="LIVE FORMULAS: 3,000+"/> <img src="https://img.shields.io/badge/FABRICATED_USER_DATA-0-B388FF?style=for-the-badge&labelColor=0B1026" alt="FABRICATED USER DATA: 0"/>
 
 **AI-First Product Management cohort (Airtribe, 2026) + independent practice** · research · strategy · PRDs · metrics · PLG · system design — every decision calculated in a live-formula workbook, never asserted
 
@@ -276,11 +276,11 @@ mindmap
 **Eswar Mahalingam** · B.Com · MBA · PGDLSCM · CSCMP SCPro · Six Sigma Black Belt
 Data Scientist @ Zidio Development · Ghaziabad NCR, India · Open to India · EU (Blue Card) · Gulf · Immediate joiner
 
-[![LinkedIn](https://img.shields.io/badge/✦-LINKEDIN-000000?style=for-the-badge&labelColor=C9CDD6)](https://linkedin.com/in/eswar-mahalingam)
-[![Email](https://img.shields.io/badge/✦-EMAIL-000000?style=for-the-badge&labelColor=FFFFFF)](mailto:eswarmba05313@gmail.com)
-[![Phone](https://img.shields.io/badge/✦-+91_9360548243-000000?style=for-the-badge&labelColor=C9CDD6)](tel:+919360548243)
-[![Portfolio](https://img.shields.io/badge/✦-PORTFOLIO_SITE-000000?style=for-the-badge&labelColor=FFFFFF)](https://eswar-3d-portfolio.netlify.app)
-[![Profile](https://img.shields.io/badge/⬅-CAREER_CONTROL_TOWER-000000?style=for-the-badge&labelColor=FFFFFF)](https://github.com/Eswar5313)
+[![LinkedIn](https://img.shields.io/badge/✦-LINKEDIN-0B1026?style=for-the-badge&labelColor=B388FF)](https://linkedin.com/in/eswar-mahalingam)
+[![Email](https://img.shields.io/badge/✦-EMAIL-0B1026?style=for-the-badge&labelColor=00E5FF)](mailto:eswarmba05313@gmail.com)
+[![Phone](https://img.shields.io/badge/✦-+91_9360548243-0B1026?style=for-the-badge&labelColor=B388FF)](tel:+919360548243)
+[![Portfolio](https://img.shields.io/badge/✦-PORTFOLIO_SITE-0B1026?style=for-the-badge&labelColor=00E5FF)](https://eswar-3d-portfolio.netlify.app)
+[![Profile](https://img.shields.io/badge/⬅-CAREER_CONTROL_TOWER-0B1026?style=for-the-badge&labelColor=00E5FF)](https://github.com/Eswar5313)
 
 <img src="https://raw.githubusercontent.com/Eswar5313/Eswar5313/main/assets/kailash-footer.svg" width="100%" alt="" />
 
