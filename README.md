@@ -5,7 +5,7 @@
 
 <a href="https://github.com/Eswar5313"><img src="https://img.shields.io/badge/⬅-CAREER_CONTROL_TOWER-0B1026?style=for-the-badge&labelColor=00E5FF" alt="CAREER CONTROL TOWER"/></a> <a href="https://eswar5313.github.io/Eswar-Master-Project-Portfolio-2026/"><img src="https://img.shields.io/badge/✦-MASTER_PORTFOLIO-0B1026?style=for-the-badge&labelColor=B388FF" alt="MASTER PORTFOLIO"/></a> <a href="https://eswar5313.github.io/Eswar-Portfolio-Lens-Index-2026/"><img src="https://img.shields.io/badge/✦-LENS_INDEX-0B1026?style=for-the-badge&labelColor=00E5FF" alt="LENS INDEX"/></a> <a href="https://eswar-pm-case-notes.netlify.app"><img src="https://img.shields.io/badge/✦-PM_CASE_NOTES_(LIVE)-0B1026?style=for-the-badge&labelColor=00E5FF" alt="PM CASE NOTES (LIVE)"/></a> <a href="https://eswar5313.github.io/product-management-case-studies/"><img src="https://img.shields.io/badge/✦-CASE_DASHBOARD-0B1026?style=for-the-badge&labelColor=B388FF" alt="CASE DASHBOARD"/></a>
 
-<img src="https://img.shields.io/badge/CASE_STUDIES-12-00E5FF?style=for-the-badge&labelColor=0B1026" alt="CASE STUDIES: 12"/> <img src="https://img.shields.io/badge/FRAMEWORKS-20%2B-B388FF?style=for-the-badge&labelColor=0B1026" alt="FRAMEWORKS: 20+"/> <img src="https://img.shields.io/badge/LIVE_FORMULAS-3,000%2B-00E5FF?style=for-the-badge&labelColor=0B1026" alt="LIVE FORMULAS: 3,000+"/> <img src="https://img.shields.io/badge/FABRICATED_USER_DATA-0-B388FF?style=for-the-badge&labelColor=0B1026" alt="FABRICATED USER DATA: 0"/>
+<img src="https://img.shields.io/badge/CASE_STUDIES-13-00E5FF?style=for-the-badge&labelColor=0B1026" alt="CASE STUDIES: 13"/> <img src="https://img.shields.io/badge/FRAMEWORKS-20%2B-B388FF?style=for-the-badge&labelColor=0B1026" alt="FRAMEWORKS: 20+"/> <img src="https://img.shields.io/badge/LIVE_FORMULAS-3,000%2B-00E5FF?style=for-the-badge&labelColor=0B1026" alt="LIVE FORMULAS: 3,000+"/> <img src="https://img.shields.io/badge/FABRICATED_USER_DATA-0-B388FF?style=for-the-badge&labelColor=0B1026" alt="FABRICATED USER DATA: 0"/>
 
 **AI-First Product Management cohort (Airtribe, 2026) + independent practice** · research · strategy · PRDs · metrics · PLG · system design — every decision calculated in a live-formula workbook, never asserted
 
@@ -13,18 +13,18 @@
 
 <img src="https://raw.githubusercontent.com/Eswar5313/Eswar5313/main/assets/divider.svg" width="100%" alt="" />
 
-> 📘 **[Download the project book (PDF)](PM_Case_Book.pdf)** — cover + one summary sheet per project (12 sheets): what it is, verified results, deliverables, method, role fit and how to verify. Individual sheets: [`case-sheets/`](case-sheets/).
+> 📘 **[Download the project book (PDF)](PM_Case_Book.pdf)** — cover + one summary sheet per project (12 sheets): what it is, verified results, deliverables, method, role fit and how to verify. Individual sheets: [`case-sheets/`](case-sheets/). Case 13 (WorkRadar) was added on 12 Oct 2026 and has its own folder: [`13-workradar/`](13-workradar/).
 
 
 
 ## 🧭 What This Repo Is
 
-> **12 product management case studies** built during my **AI-First Product Management** cohort (Airtribe) and independent practice — covering **mobility, quick commerce, e-commerce UX, B2B SaaS, fitness, food delivery, travel PLG and platform system design**. Each case applies named PM frameworks to a real product problem and ships as a **PDF report + presentation deck + Excel decision workbook with live formulas** — decisions are calculated, not asserted.
+> **13 product management case studies** built during my **AI-First Product Management** cohort (Airtribe) and independent practice — covering **mobility, quick commerce, e-commerce UX, B2B SaaS, fitness, food delivery, travel PLG, platform system design and an AI-built working MVP**. Each case applies named PM frameworks to a real product problem and ships as a **PDF report + presentation deck + Excel decision workbook with live formulas** — decisions are calculated, not asserted.
 
 **Non-fabrication standard:** no invented user quotes or usability data. Interview slots ship as real templates; any synthetic dataset is explicitly declared as such.
 
 <img src="https://raw.githubusercontent.com/Eswar5313/Eswar5313/main/assets/divider.svg" width="100%" alt="" />
-## 📁 The 12 Case Studies
+## 📁 The 13 Case Studies
 
 <details open>
 <summary>🚕 <b>01 — Uber: Pickup Coordination in Dense Areas</b></summary>
@@ -228,6 +228,26 @@
 | 📊 Workbook | 12 sheets · 159 live formulas · 10-slide deck · 62-pp master |
 
 **Frameworks:** user stories · FR/NFR design · recommender architecture · trade-off analysis
+
+</details>
+
+<details open>
+<summary>📡 <b>13 — WorkRadar: AI-Powered Manager Dashboard (PRD → UX → Working MVP)</b></summary>
+<br>
+
+**Problem:** A manager rebuilds status every morning from Slack, Jira, GitHub and email. Build a web app that shows top work, what happened today, what needs attention and who is blocked — on one screen.
+
+▶ **[Open the live MVP](https://eswar5313.github.io/product-management-case-studies/13-workradar/)** · [Source code](13-workradar/) · [PRD](13-workradar/docs/WorkRadar_PRD.pdf) · [AI workflow](13-workradar/docs/WorkRadar_AI_Workflow.pdf) · [Screens](13-workradar/screens/)
+
+| Component | What's Inside |
+|---|---|
+| 📄 PRD (2 pp) | Problem, personas, journey, pain points (declared as hypotheses), pilot metrics, MVP scope, must-have vs nice-to-have, phased plan |
+| 🖥️ Working MVP | Dashboard with AI brief + radar, priority feed, item details, cross-tool search, Assign / Mark done / Snooze with Undo, empty and error states · mock data (17 items, 4 tools, 6 teammates — all fictional) |
+| 🧮 Priority model | Visible additive score capped at 99 — every item lists the factors behind its rank |
+| 🤖 AI workflow | Tools, prompts, what AI generated, six changes after the first build, eight trade-offs |
+| 🧱 Stack | Plain HTML, CSS and JavaScript · 621 lines · no third-party JavaScript · no build step |
+
+**Frameworks:** PRD anatomy · JTBD · MoSCoW scoping · phased delivery · transparent scoring · AI-assisted prototyping
 
 </details>
 
