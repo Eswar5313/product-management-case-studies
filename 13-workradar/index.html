@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>body{margin:0}[hidden]{display:none!important}</style></head><body>
+<title>WorkRadar</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: fixed navy rail + one scrolling work column; the dashboard answers four questions in four panels under a brief + radar. */
+:root{
+  --bg:#F2F4F8; --surface:#FFFFFF; --sunk:#E9EDF3; --ink:#0E1B33; --muted:#56627A; --line:#D9DFE9;
+  --rail:#0A1F44; --rail-ink:#E8ECF5; --rail-muted:#9AA8C4; --rail-line:#1D3566;
+  --gold:#C9A227; --gold-ink:#7A5E00; --on-gold:#0A1F44;
+  --crit:#B82A17; --crit-bg:#FBE9E5; --high:#A85C00; --high-bg:#FCEFD9; --med:#1F5FB0; --med-bg:#E4EEFB; --low:#56627A; --low-bg:#E9EDF3; --ok:#1B7046; --ok-bg:#E1F3EA;
+  --display:"Fraunces",Georgia,"Times New Roman",serif; --ui:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif; --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#081020; --surface:#101B31; --sunk:#0C1629; --ink:#E9EDF5; --muted:#97A4BD; --line:#22314F;
+  --rail:#060D1C; --rail-ink:#E8ECF5; --rail-muted:#8B99B6; --rail-line:#18294A;
+  --gold:#DDB53A; --gold-ink:#E3BD4A; --on-gold:#0A1F44;
+  --crit:#FF8A78; --crit-bg:#3A1612; --high:#F3B25A; --high-bg:#35260E; --med:#8DB8F5; --med-bg:#13284A; --low:#97A4BD; --low-bg:#18243C; --ok:#6FD3A0; --ok-bg:#0F2D20; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#081020; --surface:#101B31; --sunk:#0C1629; --ink:#E9EDF5; --muted:#97A4BD; --line:#22314F;
+  --rail:#060D1C; --rail-ink:#E8ECF5; --rail-muted:#8B99B6; --rail-line:#18294A;
+  --gold:#DDB53A; --gold-ink:#E3BD4A; --on-gold:#0A1F44;
+  --crit:#FF8A78; --crit-bg:#3A1612; --high:#F3B25A; --high-bg:#35260E; --med:#8DB8F5; --med-bg:#13284A; --low:#97A4BD; --low-bg:#18243C; --ok:#6FD3A0; --ok-bg:#0F2D20; color-scheme:dark }
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 var(--ui)}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+h1,h2,h3,p{margin:0}
+.app{display:grid;grid-template-columns:220px minmax(0,1fr);min-height:100vh}
+
+/* rail */
+.rail{background:var(--rail);color:var(--rail-ink);padding:20px 14px;display:flex;flex-direction:column;gap:22px;position:sticky;top:0;height:100vh}
+.brand{display:flex;align-items:center;gap:10px;padding:0 6px}
+.brand svg{flex:none}
+.brand b{font:600 21px/1 var(--display);letter-spacing:-.01em}
+.nav{display:flex;flex-direction:column;gap:4px}
+.nav button{display:flex;align-items:center;gap:10px;width:100%;padding:9px 10px;border:0;border-radius:8px;background:none;color:var(--rail-muted);text-align:left;font-weight:500}
+.nav button:hover{color:var(--rail-ink);background:var(--rail-line)}
+.nav button[aria-current="page"]{background:var(--gold);color:var(--on-gold)}
+.nav .count{margin-left:auto;font:500 12px var(--mono)}
+.rail-foot{margin-top:auto;display:flex;flex-direction:column;gap:10px;font-size:12.5px;color:var(--rail-muted);padding:0 6px}
+.rail-foot .srcs{display:flex;flex-direction:column;gap:5px}
+.rail-foot .srcs span{display:flex;align-items:center;gap:7px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--ok);flex:none}
+.dot.bad{background:var(--crit)}
+.linkbtn{border:0;background:none;padding:0;color:var(--rail-muted);text-decoration:underline;text-underline-offset:3px;text-align:left;font-size:12.5px}
+.linkbtn:hover{color:var(--rail-ink)}
+.who{display:flex;align-items:center;gap:9px;padding-top:12px;border-top:1px solid var(--rail-line);color:var(--rail-ink)}
+.who small{display:block;color:var(--rail-muted)}
+
+/* main */
+.main{padding-block:26px 60px;padding-inline:clamp(16px,3vw,36px);min-width:0}
+.wrap{max-width:1120px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+.head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.head h1{font:600 28px/1.15 var(--display);letter-spacing:-.015em;text-wrap:balance}
+.head p{color:var(--muted);font-size:13.5px}
+.eyebrow{font:500 11.5px var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.banner{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 14px;border-radius:var(--r);background:var(--crit-bg);color:var(--crit);border:1px solid currentColor;font-size:14px}
+.banner b{font-weight:600}
+.banner .btn{margin-left:auto}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.panel>header{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:14px 16px 10px}
+.panel>header h2{font:600 15px var(--ui)}
+.panel>header span{font-size:12.5px;color:var(--muted)}
+.hero{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:20px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+
+/* brief */
+.brief{background:var(--rail);color:var(--rail-ink);border-radius:var(--r);padding:22px 24px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.brief .eyebrow{color:var(--gold)}
+.brief-text{font:400 19px/1.5 var(--display);text-wrap:pretty;white-space:pre-line}
+.brief-text.busy{opacity:.6}
+.brief-meta{display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:12.5px;color:var(--rail-muted);margin-top:auto}
+.brief-meta .btn{margin-left:auto}
+
+/* radar */
+.radar{padding-bottom:14px}
+.radar-box{position:relative;width:min(100%,290px);aspect-ratio:1;margin:0 auto}
+.radar-box svg{position:absolute;inset:0;width:100%;height:100%}
+.sweep{position:absolute;inset:11%;border-radius:50%;background:conic-gradient(from 0deg,transparent 0 300deg,color-mix(in srgb,var(--gold) 34%,transparent) 360deg);animation:spin 7s linear infinite;pointer-events:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.sweep{animation:none}}
+.blip{cursor:pointer}
+.blip:hover,.blip:focus-visible{stroke:var(--ink);stroke-width:2;outline:none}
+.radar-key{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);padding:6px 12px 0}
+.radar-key i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}
+
+/* rows */
+.rows{display:flex;flex-direction:column}
+.row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:12px;padding:11px 16px;border-top:1px solid var(--line);width:100%;background:none;border-inline:0;border-bottom:0;text-align:left}
+.row:hover{background:var(--sunk)}
+.row .t{font-weight:500;overflow-wrap:anywhere}
+.row .s{font-size:12.5px;color:var(--muted);display:flex;gap:6px 10px;flex-wrap:wrap;align-items:center}
+.row.done .t{text-decoration:line-through;color:var(--muted)}
+.rank{font:500 12px var(--mono);color:var(--muted);width:20px;text-align:right}
+.score{font:600 13px var(--mono);font-variant-numeric:tabular-nums;min-width:30px;text-align:center;padding:3px 6px;border-radius:6px}
+.pill{font:500 11.5px var(--ui);padding:2px 8px;border-radius:99px;white-space:nowrap}
+.t-crit{background:var(--crit-bg);color:var(--crit)} .t-high{background:var(--high-bg);color:var(--high)} .t-med{background:var(--med-bg);color:var(--med)} .t-low{background:var(--low-bg);color:var(--low)} .t-ok{background:var(--ok-bg);color:var(--ok)}
+.src{display:inline-flex;align-items:center;gap:5px;font:500 11.5px var(--mono);color:var(--muted);white-space:nowrap}
+.src svg{width:13px;height:13px;flex:none}
+.av{width:26px;height:26px;border-radius:50%;background:var(--sunk);border:1px solid var(--line);display:inline-grid;place-items:center;font:600 10.5px var(--ui);color:var(--ink);flex:none}
+.rail .av{background:var(--rail-line);border-color:var(--rail-line);color:var(--rail-ink)}
+.empty{padding:26px 18px;text-align:center;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:8px}
+.empty b{color:var(--ink);font:600 17px var(--display)}
+.empty.err b{color:var(--crit)}
+.ev{display:grid;grid-template-columns:62px minmax(0,1fr);gap:10px;padding:9px 16px;border-top:1px solid var(--line);font-size:13.5px;width:100%;background:none;border-inline:0;border-bottom:0;text-align:left}
+.ev:hover{background:var(--sunk)}
+.ev time{font:500 12px var(--mono);color:var(--muted);padding-top:2px}
+
+/* controls */
+.btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:7px 12px;border-radius:8px;font-weight:500;font-size:13.5px;white-space:nowrap}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--gold);border-color:var(--gold);color:var(--on-gold)}
+.btn.ghost{background:transparent;border-color:var(--rail-line);color:var(--rail-ink)}
+.btn.sm{padding:4px 9px;font-size:12.5px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--surface);color:var(--muted);padding:5px 11px;border-radius:99px;font-size:13px;font-weight:500}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.toolbar{display:flex;gap:10px 18px;flex-wrap:wrap;align-items:center}
+.acts{display:flex;gap:6px;flex-wrap:wrap;position:relative}
+.menuwrap{position:relative}
+.menu{position:absolute;right:0;top:calc(100% + 4px);z-index:20;min-width:190px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:5px;box-shadow:0 10px 30px rgb(0 0 0 / .18);display:flex;flex-direction:column}
+.menu button{border:0;background:none;text-align:left;padding:7px 10px;border-radius:6px;display:flex;gap:8px;align-items:center}
+.menu button:hover{background:var(--sunk)}
+.menu small{color:var(--muted);margin-left:auto}
+.feedrow{grid-template-columns:auto minmax(0,1fr) auto}
+.feedrow .acts{grid-column:2 / -1}
+.card{border-top:1px solid var(--line);padding:13px 16px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 12px}
+.card .open{border:0;background:none;padding:0;text-align:left;font-weight:600;font-size:15px;overflow-wrap:anywhere}
+.card .open:hover{text-decoration:underline;text-underline-offset:3px}
+.card p{color:var(--muted);font-size:13.5px}
+.card .why{font-size:12.5px;color:var(--muted)}
+.card .foot{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+
+/* search */
+.searchbar{display:flex;gap:10px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:4px 14px}
+.searchbar:focus-within{border-color:var(--gold)}
+.searchbar input{flex:1;min-width:0;border:0;background:none;padding:11px 0;font-size:16px;outline:none}
+mark{background:color-mix(in srgb,var(--gold) 38%,transparent);color:inherit;border-radius:3px;padding:0 1px}
+
+/* detail */
+.detail{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:20px;align-items:start}
+.detail h1{font:600 26px/1.2 var(--display);text-wrap:balance}
+.sec{padding:14px 16px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
+.sec:first-child{border-top:0}
+.sec h3{font:500 11.5px var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.digest{font:400 17px/1.55 var(--display)}
+.next{background:var(--sunk);border-radius:8px;padding:11px 13px;border-left:0}
+.msg{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px}
+.msg .m{font-size:14px}
+.msg .m small{color:var(--muted);display:block}
+.kv{display:grid;grid-template-columns:92px minmax(0,1fr);gap:7px 10px;font-size:14px}
+.kv dt{color:var(--muted)} .kv dd{margin:0;overflow-wrap:anywhere}
+.factor{display:flex;justify-content:space-between;gap:10px;font-size:13.5px}
+.factor b{font:600 13px var(--mono)}
+.bar{height:6px;border-radius:3px;background:var(--sunk);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--gold)}
+.toast{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 14px;border-radius:10px;display:flex;gap:14px;align-items:center;z-index:50;font-size:14px;max-width:calc(100% - 32px)}
+.toast button{border:0;background:none;color:var(--gold);font-weight:600;padding:0}
+
+@media (max-width:900px){ .hero,.grid2,.detail{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:720px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .rail{position:fixed;inset:auto 0 0 0;top:auto;height:auto;z-index:30;flex-direction:row;padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));gap:0}
+  .brand,.rail-foot{display:none}
+  .nav{flex-direction:row;flex:1;justify-content:space-around}
+  .nav button{flex-direction:column;gap:2px;font-size:11.5px;padding:6px 8px;width:auto;align-items:center}
+  .nav .count{display:none}
+  .main{padding-bottom:96px}
+  .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+  .head h1{font-size:24px} .brief-text{font-size:17px}
+  .mobile-tools{display:flex!important}
+}
+.mobile-tools{display:none;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--muted)}
+.mobile-tools .linkbtn{color:var(--muted)}
+</style>
+<div class="app"><aside class="rail" id="rail"></aside><main class="main"><div class="wrap" id="view"></div></main></div><div id="toast"></div>
+<script>
+/* WorkRadar mock data. Every person, ticket and message here is fictional.
+   Timestamps are relative to "now" so the demo always looks like today. */
+const H = 3600e3;
+const ago = h => Date.now() - h * H;
+const todayAt = (hr, min = 0, addDays = 0) => { const d = new Date(); d.setDate(d.getDate() + addDays); d.setHours(hr, min, 0, 0); return d.getTime(); };
+
+const PEOPLE = {
+  ananya: { name: "Ananya Rao", role: "Backend" },
+  karthik: { name: "Karthik Iyer", role: "Frontend" },
+  meera: { name: "Meera Nair", role: "QA" },
+  rohan: { name: "Rohan Gupta", role: "DevOps" },
+  sana: { name: "Sana Sheikh", role: "Design" },
+  vikram: { name: "Vikram Desai", role: "Backend" },
+  you: { name: "You", role: "Engineering Manager" }
+};
+
+const SOURCES = { slack: "Slack", jira: "Jira", github: "GitHub", email: "Email" };
+
+const SEED = [
+  { id: "WR-101", src: "jira", ref: "PAY-482", type: "blocker", title: "UPI refund webhook fails for partial refunds",
+    body: "Partial refunds return 422 from the bank sandbox. Fix is ready but cannot be verified without new sandbox credentials from the bank partner.",
+    owner: "ananya", needsYou: true, due: todayAt(18), created: ago(52), updated: ago(1.2), impact: "37 customer refunds stuck",
+    blocked: { who: "ananya", on: "Bank partner sandbox credentials", since: ago(28) },
+    digest: "Ananya's fix for partial refunds is code-complete. Verification is stuck because the bank partner rotated sandbox credentials on Friday and has not issued new ones. Two follow-ups to the partner's support desk went unanswered. 37 refunds are queued behind this.",
+    next: "Escalate to the bank partner's account manager. An engineer-to-support request has already failed twice.",
+    thread: [ { who: "ananya", at: ago(52), text: "Root cause found: amount rounding on partial refunds. Patch in branch fix/partial-refund." },
+      { who: "ananya", at: ago(28), text: "Sandbox creds rejected after Friday rotation. Raised ticket with partner support." },
+      { who: "meera", at: ago(20), text: "QA plan ready. Need a working sandbox to run 12 cases." },
+      { who: "ananya", at: ago(1.2), text: "No reply from partner support on second follow-up. Need an escalation path." } ] },
+  { id: "WR-102", src: "github", ref: "PR #1184", type: "review", title: "Review: retry logic for payment gateway timeouts",
+    body: "Adds exponential backoff with idempotency keys on gateway timeouts. Waiting on your review. Release 4.12 is cut tomorrow morning.",
+    owner: "vikram", needsYou: true, due: todayAt(10, 0, 1), created: ago(26), updated: ago(3), release: true,
+    digest: "Vikram's PR adds backoff and idempotency keys so a gateway timeout can no longer double-charge. CI is green and Ananya has approved. It needs a second approval from you before the 4.12 cut tomorrow at 10 AM.",
+    next: "Review the idempotency-key handling in gateway/retry.ts (about 140 lines) and approve or request changes today.",
+    thread: [ { who: "vikram", at: ago(26), text: "Opened PR. 6 files changed, +212 / -48." },
+      { who: "ananya", at: ago(19), text: "Approved. One nit on jitter range, non-blocking." },
+      { who: "vikram", at: ago(3), text: "Rebased on main. Still need second approval for the 4.12 cut." } ] },
+  { id: "WR-103", src: "slack", ref: "#checkout-oncall", type: "incident", title: "Checkout API p95 latency is 2.3× normal since the morning deploy",
+    body: "p95 on /checkout went from 410 ms to 950 ms after the morning deploy. Error rate is flat. Rohan is investigating but cannot reach staging.",
+    owner: "rohan", needsYou: false, due: null, created: ago(2.1), updated: ago(0.3), impact: "Slower checkout for all users",
+    digest: "Latency more than doubled after this morning's deploy. Errors have not increased, so customers are slowed, not failing. Rohan suspects the new cart-totals query. He wants to reproduce on staging but lost access after last night's credential rotation.",
+    next: "Decide with Rohan whether to roll back the morning deploy now or wait for a staging repro.",
+    thread: [ { who: "rohan", at: ago(2.1), text: "Alert: p95 /checkout 950 ms (baseline 410 ms). Started right after the morning deploy." },
+      { who: "vikram", at: ago(1.4), text: "Could be the decimal migration in cart totals. New query has no index on order_id." },
+      { who: "rohan", at: ago(0.3), text: "Can't repro on staging, my DB access is gone. Rollback is a 5 minute job if we want it." } ] },
+  { id: "WR-104", src: "email", ref: "From Deepa Krishnan, Finance", type: "decision", title: "Sign-off needed: Q3 reconciliation variance of ₹4.2 lakh",
+    body: "Finance needs engineering sign-off on the root cause of the Q3 settlement variance before books close at 5 PM today.",
+    owner: null, needsYou: true, due: todayAt(17), created: ago(21), updated: ago(4),
+    digest: "Finance found a ₹4.2 lakh gap between gateway settlements and order totals for Q3. Ananya traced most of it to the coupon stacking bug closed today. Finance wants your written confirmation of the cause before 5 PM so the books can close.",
+    next: "Reply to Deepa confirming the coupon stacking bug (PAY-455) as root cause and attach Ananya's query.",
+    thread: [ { who: "you", at: ago(21), text: "Received from Deepa Krishnan: variance report attached, sign-off needed by Monday 5 PM." },
+      { who: "ananya", at: ago(6), text: "₹3.9 lakh of the gap maps to stacked coupons. Query and sheet shared." },
+      { who: "you", at: ago(4), text: "Reminder from Deepa: books close at 5 PM today." } ] },
+  { id: "WR-105", src: "jira", ref: "PAY-490", type: "blocker", title: "Saved cards screen: design handoff still pending",
+    body: "Karthik cannot start the saved cards screen. Final specs for the empty and error states were due from design on Friday.",
+    owner: "karthik", needsYou: false, due: todayAt(18, 0, 2), created: ago(70), updated: ago(5),
+    blocked: { who: "karthik", on: "Final specs from Sana (design)", since: ago(48) },
+    digest: "Karthik has been waiting two days for the saved cards specs. Sana has the main flow done but not the empty and error states. Sana is on leave Thursday and Friday, so the handoff has to land by Wednesday or the story slips out of Sprint 42.",
+    next: "Ask Sana to hand off the main flow today so Karthik can start, and follow with edge states by Wednesday.",
+    thread: [ { who: "karthik", at: ago(48), text: "Blocked on specs. Picking up PAY-471 in the meantime." },
+      { who: "sana", at: ago(22), text: "Main flow is done in Figma. Empty and error states need one more day." },
+      { who: "karthik", at: ago(5), text: "Still no handoff link. Can I start from the main flow?" } ] },
+  { id: "WR-106", src: "github", ref: "CI · main", type: "risk", title: "main is red: flaky test in order-service integration suite",
+    body: "The same integration test has failed 3 of the last 7 runs on main today. Merges are being retried by hand.",
+    owner: "meera", needsYou: false, due: todayAt(18), created: ago(7), updated: ago(1), release: true,
+    digest: "test_order_total_after_refund fails intermittently, 3 times today. Meera thinks it depends on test order and shared fixtures. It is slowing every merge and puts tomorrow's 4.12 cut at risk if it is not quarantined or fixed.",
+    next: "Agree with Meera to quarantine the test today and fix it properly after the release.",
+    thread: [ { who: "meera", at: ago(7), text: "Flaky failure on main, run 3 of 7 today. Looks order-dependent." },
+      { who: "vikram", at: ago(4), text: "Hit it twice on my PR. Re-running manually." },
+      { who: "meera", at: ago(1), text: "Proposal: quarantine now, fix after 4.12. Need a yes." } ] },
+  { id: "WR-107", src: "slack", ref: "DM from Meera Nair", type: "decision", title: "Decide: ship 4.12 without the full COD regression pass?",
+    body: "The cash-on-delivery regression pass needs 6 more hours. Meera asks whether to cut 4.12 on time with a reduced pass or move the cut to Wednesday.",
+    owner: null, needsYou: true, due: todayAt(16), created: ago(5), updated: ago(2), release: true,
+    digest: "The COD suite has 64 cases and 41 are done. Finishing needs about 6 more hours, which overlaps tomorrow's 10 AM cut. Meera suggests running the 12 highest-risk remaining cases and shipping on time. No COD code changed in 4.12 apart from the totals migration.",
+    next: "Choose: reduced pass and ship on time, or full pass and cut on Wednesday. Reply to Meera by 4 PM.",
+    thread: [ { who: "meera", at: ago(5), text: "COD regression: 41 of 64 done. Full pass won't finish before the cut." },
+      { who: "meera", at: ago(2), text: "Option A: top 12 risk cases, ship on time. Option B: move cut to Wed. Your call." } ] },
+  { id: "WR-108", src: "jira", ref: "PAY-471", type: "task", title: "Address autocomplete for Tier-2 pincodes",
+    body: "Extends pincode autocomplete to 4,300 Tier-2 and Tier-3 pincodes. In progress and on track for Thursday.",
+    owner: "karthik", needsYou: false, due: todayAt(18, 0, 3), created: ago(96), updated: ago(8),
+    digest: "Karthik has the lookup working for 4,300 new pincodes. Remaining work is debounce tuning and two accessibility fixes. It is on track for Thursday and is the highest-value planned story in Sprint 42.",
+    next: "No action needed. Check in at Wednesday standup.",
+    thread: [ { who: "karthik", at: ago(30), text: "Lookup API integrated. 4,300 pincodes loaded." }, { who: "karthik", at: ago(8), text: "Debounce and a11y fixes left. On track for Thu." } ] },
+  { id: "WR-109", src: "email", ref: "From gateway partner", type: "risk", title: "Gateway partner: API v1 sunset on 30 November",
+    body: "The payment gateway is retiring API v1 on 30 November. Three of our services still call v1 endpoints. Nobody owns the migration yet.",
+    owner: null, needsYou: false, due: todayAt(18, 0, 7), created: ago(30), updated: ago(30),
+    digest: "The partner gave seven weeks of notice. Refunds, settlements and the reconciliation job still call v1. The migration guide estimates 2 to 3 days per service. There is no owner and it is not in the Sprint 42 or 43 plan.",
+    next: "Assign an owner this week and add a sizing story to Sprint 43.",
+    thread: [ { who: "you", at: ago(30), text: "Notice received: v1 endpoints stop responding on 30 Nov. Migration guide linked." } ] },
+  { id: "WR-113", src: "email", ref: "From Farah Ali, Support", type: "risk", title: "14 support tickets: OTP not arriving on one telecom circle",
+    body: "Support reports 14 tickets since morning from one telecom circle where payment OTPs do not arrive. No engineer has picked it up.",
+    owner: null, needsYou: false, due: todayAt(18), created: ago(4.5), updated: ago(1.5), impact: "14 customers cannot complete payment",
+    digest: "All 14 tickets come from one telecom circle and started early this morning. The SMS vendor's status page shows no incident. It may be a DLT template issue on that operator. Ticket volume is rising by about 3 an hour.",
+    next: "Assign an owner now. Vikram handled the last SMS vendor issue.",
+    thread: [ { who: "you", at: ago(4.5), text: "Received from Farah Ali: 9 tickets, same telecom circle, OTP not delivered." }, { who: "you", at: ago(1.5), text: "Update from Farah: now 14 tickets." } ] },
+  { id: "WR-114", src: "github", ref: "Issue #1190", type: "risk", title: "High-severity dependency alert in image-upload library",
+    body: "Automated alert: the image-upload dependency has a high-severity advisory. A patched version is available. Unassigned.",
+    owner: null, needsYou: false, due: todayAt(18, 0, 2), created: ago(16), updated: ago(16),
+    digest: "The advisory allows a crafted file to exhaust memory in the upload path. We use the library only in the KYC document upload. A patch version exists and the changelog shows no breaking changes.",
+    next: "Assign to a backend engineer. The upgrade should take under an hour plus a QA smoke test.",
+    thread: [ { who: "you", at: ago(16), text: "Bot alert opened: upgrade to patched version recommended." } ] },
+  { id: "WR-117", src: "slack", ref: "#checkout-team", type: "blocker", title: "Rohan lost staging DB access after credential rotation",
+    body: "Last night's credential rotation removed Rohan from the staging DB group. IT ticket raised 5 hours ago with no response.",
+    owner: "rohan", needsYou: true, due: todayAt(15), created: ago(5), updated: ago(0.6),
+    blocked: { who: "rohan", on: "IT to restore staging DB access", since: ago(5) },
+    digest: "Rohan cannot reproduce the latency incident because his staging database access was dropped in the rotation. The IT ticket has been open for five hours. IT approves access requests faster when a manager confirms.",
+    next: "Approve the IT access request as Rohan's manager. It takes one click in the IT portal.",
+    thread: [ { who: "rohan", at: ago(5), text: "Staging DB says permission denied. Raised IT ticket." }, { who: "rohan", at: ago(0.6), text: "Still locked out. This is now blocking the latency investigation." } ] },
+  { id: "WR-115", src: "jira", ref: "Sprint 42 board", type: "risk", title: "Sprint 42: 3 of 11 stories at risk with 4 days left",
+    body: "PAY-482, PAY-490 and PAY-493 have had no status change in two days. The sprint ends Friday.",
+    owner: null, needsYou: true, due: todayAt(18, 0, 4), created: ago(9), updated: ago(9),
+    digest: "Eight of 11 stories are done or on track. The three at risk are the refund webhook and saved cards (both blocked) and PAY-493, which has not been started. If the two blockers clear by Wednesday the sprint lands with one story carried over.",
+    next: "Clear the two blockers first, then decide at Wednesday standup whether to drop PAY-493.",
+    thread: [ { who: "you", at: ago(9), text: "Board check: 3 stories with no movement for 48 hours." } ] },
+  { id: "WR-112", src: "slack", ref: "#checkout-team", type: "fyi", title: "Sana is on leave Thursday and Friday",
+    body: "Sana Sheikh is out Thursday and Friday. Design reviews need to happen by Wednesday.",
+    owner: "sana", needsYou: false, due: null, created: ago(27), updated: ago(27),
+    digest: "Sana is out for two days at the end of the week. The saved cards handoff (PAY-490) and the Sprint 43 design review both depend on her.",
+    next: "Move the Sprint 43 design review to Wednesday.",
+    thread: [ { who: "sana", at: ago(27), text: "Heads up: on leave Thu and Fri. Ping me before Wednesday evening for anything urgent." } ] },
+  { id: "WR-116", src: "email", ref: "From HR", type: "fyi", title: "Appraisal self-review forms due Friday",
+    body: "Six team members need to submit self-review forms by Friday. Two have submitted so far.",
+    owner: null, needsYou: false, due: todayAt(18, 0, 4), created: ago(50), updated: ago(50),
+    digest: "HR's reminder covers the whole squad. Ananya and Meera have submitted. Four forms are outstanding.",
+    next: "Mention it at tomorrow's standup.",
+    thread: [ { who: "you", at: ago(50), text: "Reminder received from HR: forms close Friday 6 PM." } ] },
+  { id: "WR-110", src: "github", ref: "PR #1179", type: "task", title: "Migrate cart totals to decimal arithmetic", status: "done",
+    body: "Replaces float arithmetic in cart totals with decimal. Merged this morning and deployed.",
+    owner: "vikram", needsYou: false, due: null, created: ago(74), updated: ago(2.6),
+    digest: "Merged and deployed. This is the deploy that the latency incident points to.",
+    next: "Keep in view while the latency incident is open.",
+    thread: [ { who: "vikram", at: ago(2.6), text: "Merged to main and deployed." } ] },
+  { id: "WR-111", src: "jira", ref: "PAY-455", type: "task", title: "Coupon stacking allowed two percentage coupons", status: "done",
+    body: "Two percentage coupons could be applied to one order. Fixed and closed today.",
+    owner: "ananya", needsYou: false, due: null, created: ago(120), updated: ago(3.4),
+    digest: "Closed today. This bug explains most of the Q3 reconciliation variance Finance is asking about.",
+    next: "Reference this ticket in the reply to Finance.",
+    thread: [ { who: "ananya", at: ago(3.4), text: "Fix verified in production. Closing." } ] }
+];
+
+/* "What happened today": events the connectors would emit. */
+const EVENTS = [
+  { at: ago(0.3), src: "slack", who: "rohan", text: "offered a 5 minute rollback for the latency incident", item: "WR-103" },
+  { at: ago(1), src: "github", who: "meera", text: "proposed quarantining the flaky test on main", item: "WR-106" },
+  { at: ago(1.5), src: "email", who: null, text: "Support raised the OTP ticket count from 9 to 14", item: "WR-113" },
+  { at: ago(2.1), src: "slack", who: "rohan", text: "opened an incident: checkout p95 at 950 ms", item: "WR-103" },
+  { at: ago(2.6), src: "github", who: "vikram", text: "merged PR #1179 (cart totals to decimal)", item: "WR-110" },
+  { at: ago(3), src: "github", who: "vikram", text: "rebased PR #1184 and asked for a second approval", item: "WR-102" },
+  { at: ago(3.4), src: "jira", who: "ananya", text: "closed PAY-455 (coupon stacking bug)", item: "WR-111" },
+  { at: ago(4), src: "email", who: null, text: "Finance sent a reminder: sign-off due 5 PM", item: "WR-104" },
+  { at: ago(5), src: "slack", who: "rohan", text: "reported losing staging DB access", item: "WR-117" }
+];
+
+/* WorkRadar MVP. Vanilla JS, no build step. State lives in memory and is mirrored to localStorage per browser. */
+(() => {
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const initials = n => n.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase();
+const STORE = "workradar.v1";
+
+const ICON = {
+  slack: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 2.5 5 13.5M11 2.5 10 13.5M2.5 6h11M2 10h11"/></svg>',
+  jira: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M8 1.8 14.2 8 8 14.2 1.8 8Z"/><path d="M8 5.4 10.6 8 8 10.6 5.4 8Z"/></svg>',
+  github: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="4.5" cy="3.5" r="1.7"/><circle cx="4.5" cy="12.5" r="1.7"/><circle cx="11.5" cy="5.5" r="1.7"/><path d="M4.5 5.2v5.6M11.5 7.2c0 2.6-7 1.4-7 3.6"/></svg>',
+  email: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="1.8" y="3.2" width="12.4" height="9.6" rx="1.6"/><path d="m2.2 4.2 5.8 4.6 5.8-4.6"/></svg>',
+  dashboard: '<svg width="17" height="17" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="6"/><circle cx="8" cy="8" r="2.4"/><path d="M8 8 12.4 3.8" stroke-linecap="round"/></svg>',
+  feed: '<svg width="17" height="17" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2.5 4h11M2.5 8h8M2.5 12h5"/></svg>',
+  search: '<svg width="17" height="17" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="7" cy="7" r="4.4"/><path d="m10.4 10.4 3.2 3.2"/></svg>'
+};
+
+/* ---------- state ---------- */
+const state = { items: SEED.map(i => ({ status: "open", snoozeUntil: null, ...i })), userEvents: [], view: "dashboard", itemId: null, back: "dashboard",
+  feed: { status: "open", lens: "all", src: "all" }, q: "", qsrc: "all", outage: false, menu: null, ai: null, aiBusy: false, toast: null };
+let sample = null;
+
+function load() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORE) || "null");
+    if (!saved) return;
+    for (const it of state.items) if (saved.items?.[it.id]) Object.assign(it, saved.items[it.id]);
+    state.userEvents = saved.userEvents || [];
+  } catch (e) { /* storage unavailable: run in memory */ }
+}
+function save() {
+  try {
+    const items = {};
+    for (const it of state.items) items[it.id] = { status: it.status, owner: it.owner, snoozeUntil: it.snoozeUntil };
+    localStorage.setItem(STORE, JSON.stringify({ items, userEvents: state.userEvents }));
+  } catch (e) { /* ignore */ }
+}
+const byId = id => state.items.find(i => i.id === id);
+const status = it => (it.status === "snoozed" && it.snoozeUntil && it.snoozeUntil <= Date.now()) ? "open" : it.status;
+
+/* ---------- time ---------- */
+function rel(ts) { const m = Math.max(1, Math.round((Date.now() - ts) / 60000)); if (m < 60) return m + "m ago"; const h = Math.round(m / 60); if (h < 24) return h + "h ago"; return Math.round(h / 24) + "d ago"; }
+function span(ts) { const h = (Date.now() - ts) / H; return h < 24 ? Math.max(1, Math.round(h)) + "h" : Math.floor(h / 24) + "d " + Math.round(h % 24) + "h"; }
+const clock = ts => new Date(ts).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+function dayDiff(ts) { const a = new Date(); a.setHours(0, 0, 0, 0); const b = new Date(ts); b.setHours(0, 0, 0, 0); return Math.round((b - a) / 864e5); }
+function dueLabel(ts) { if (!ts) return "No due date"; if (ts < Date.now()) return "Overdue since " + clock(ts); const d = dayDiff(ts); if (d === 0) return "Due today " + clock(ts); if (d === 1) return "Due tomorrow " + clock(ts); return "Due " + new Date(ts).toLocaleDateString([], { weekday: "short", day: "numeric", month: "short" }); }
+
+/* ---------- priority model: transparent, additive, capped at 99 ---------- */
+const BASE = { incident: 58, blocker: 34, decision: 28, review: 22, risk: 20, task: 12, fyi: 4 };
+const TYPE = { incident: "Incident", blocker: "Blocker", decision: "Decision", review: "Review", risk: "Risk", task: "Planned work", fyi: "FYI" };
+function score(it) {
+  const f = [{ label: TYPE[it.type], pts: BASE[it.type] }];
+  if (it.due) { const d = dayDiff(it.due); if (it.due < Date.now()) f.push({ label: "Overdue", pts: 24 }); else if (d === 0) f.push({ label: "Due today", pts: 18 }); else if (d === 1) f.push({ label: "Due tomorrow", pts: 10 }); else if (d <= 3) f.push({ label: "Due this week", pts: 4 }); }
+  if (it.blocked) f.push({ label: "Blocks " + PEOPLE[it.blocked.who].name.split(" ")[0] + " for " + span(it.blocked.since), pts: (Date.now() - it.blocked.since) / H > 24 ? 14 : 9 });
+  if (it.impact) f.push({ label: "Customer impact", pts: 12 });
+  if (it.needsYou) f.push({ label: "Waiting on you", pts: 8 });
+  if (it.release) f.push({ label: "Release 4.12 depends on it", pts: 8 });
+  if (!it.owner && it.type !== "fyi") f.push({ label: "No owner", pts: 6 });
+  const total = Math.min(99, f.reduce((a, b) => a + b.pts, 0));
+  return { total, factors: f };
+}
+const tierOf = t => t >= 70 ? ["crit", "Critical"] : t >= 48 ? ["high", "High"] : t >= 28 ? ["med", "Medium"] : ["low", "Low"];
+const ranked = list => list.map(it => ({ it, sc: score(it) })).sort((a, b) => b.sc.total - a.sc.total);
+const lowerFirst = t => /^[A-Z][A-Z]/.test(t) ? t : t.charAt(0).toLowerCase() + t.slice(1);
+const needsOf = r => r.filter(x => x.it.needsYou || (!x.it.owner && x.sc.total >= 48));
+const openItems = () => state.items.filter(i => status(i) === "open");
+
+/* ---------- small renderers ---------- */
+const srcTag = it => `<span class="src">${ICON[it.src]}${esc(SOURCES[it.src])} · ${esc(it.ref)}</span>`;
+const av = id => id ? `<span class="av" title="${esc(PEOPLE[id].name)}">${id === "you" ? "You" : initials(PEOPLE[id].name)}</span>` : `<span class="av" title="No owner">–</span>`;
+const ownerName = it => it.owner ? PEOPLE[it.owner].name : "No owner";
+function scoreBadge(sc) { const [k] = tierOf(sc.total); return `<span class="score t-${k}" title="Priority score">${sc.total}</span>`; }
+function statePill(it) { const s = status(it); if (s === "done") return '<span class="pill t-ok">Done</span>'; if (s === "snoozed") return `<span class="pill t-low">Snoozed until ${esc(new Date(it.snoozeUntil).toLocaleString([], { weekday: "short", hour: "numeric", minute: "2-digit" }))}</span>`; return ""; }
+function rowHTML({ it, sc }, n) {
+  return `<button class="row ${status(it) === "done" ? "done" : ""}" data-act="open" data-id="${it.id}">
+    ${n ? `<span class="rank">${n}</span>` : scoreBadge(sc)}
+    <span><span class="t">${esc(it.title)}</span><span class="s">${srcTag(it)}<span>${esc(ownerName(it))}</span>${it.due ? `<span>${esc(dueLabel(it.due))}</span>` : ""}</span></span>
+    ${n ? scoreBadge(sc) : av(it.owner)}</button>`;
+}
+function actsHTML(it) {
+  const s = status(it), m = state.menu && state.menu.id === it.id ? state.menu.kind : null;
+  if (s === "done") return `<div class="acts"><button class="btn sm" data-act="reopen" data-id="${it.id}">Reopen</button></div>`;
+  if (s === "snoozed") return `<div class="acts"><button class="btn sm" data-act="reopen" data-id="${it.id}">Bring back now</button></div>`;
+  const people = Object.entries(PEOPLE).map(([k, p]) => `<button data-act="assign" data-id="${it.id}" data-who="${k}">${av(k)}${k === "you" ? "Me" : esc(p.name)}<small>${it.owner === k ? "current" : esc(p.role)}</small></button>`).join("");
+  const sn = [["1h", "1 hour"], ["tom", "Tomorrow 9 AM"], ["mon", "Next Monday 9 AM"]].map(([k, l]) => `<button data-act="snooze" data-id="${it.id}" data-for="${k}">${l}</button>`).join("");
+  return `<div class="acts">
+    <span class="menuwrap"><button class="btn sm" data-act="menu" data-kind="assign" data-id="${it.id}" aria-expanded="${m === "assign"}">Assign</button>${m === "assign" ? `<div class="menu" role="menu">${people}</div>` : ""}</span>
+    <span class="menuwrap"><button class="btn sm" data-act="menu" data-kind="snooze" data-id="${it.id}" aria-expanded="${m === "snooze"}">Snooze</button>${m === "snooze" ? `<div class="menu" role="menu">${sn}</div>` : ""}</span>
+    <button class="btn sm primary" data-act="done" data-id="${it.id}">Mark done</button></div>`;
+}
+function cardHTML({ it, sc }, hl) {
+  const [k, label] = tierOf(sc.total), h = hl || esc;
+  const why = sc.factors.slice(1).map(f => f.label).join(" · ") || TYPE[it.type];
+  return `<div class="card">${scoreBadge(sc)}<div style="display:flex;flex-direction:column;gap:6px;min-width:0">
+    <div class="s" style="display:flex;gap:6px 10px;flex-wrap:wrap;align-items:center">${srcTag(it)}<span class="pill t-${k}">${label}</span><span class="pill t-low">${TYPE[it.type]}</span>${statePill(it)}${state.outage && it.src === "jira" ? '<span class="pill t-high">Cached copy</span>' : ""}</div>
+    <button class="open" data-act="open" data-id="${it.id}">${h(it.title)}</button>
+    <p>${h(it.body)}</p>
+    <div class="foot"><span class="why">${av(it.owner)} ${esc(ownerName(it))} · ${esc(why)}</span>${actsHTML(it)}</div></div></div>`;
+}
+const empty = (title, text, extra = "", err = false) => `<div class="empty ${err ? "err" : ""}"><b>${title}</b><span>${text}</span>${extra}</div>`;
+
+/* ---------- brief ---------- */
+function localBrief() {
+  const r = ranked(openItems());
+  if (!r.length) return "The radar is clear. Nothing open needs you right now.";
+  const needs = needsOf(r), blocked = r.filter(x => x.it.blocked), unowned = r.filter(x => !x.it.owner && x.it.type !== "fyi");
+  const top = (needs[0] || r[0]).it, out = [];
+  out.push(`${needs.length ? needs.length + (needs.length === 1 ? " item needs" : " items need") + " you today." : "Nothing is waiting on you."} Start with “${top.title}”${top.impact ? " (" + top.impact.toLowerCase() + ")" : top.due ? " (" + dueLabel(top.due).toLowerCase() + ")" : ""}.`);
+  if (blocked.length) out.push(`${blocked.length === 1 ? "One person is" : blocked.length + " people are"} blocked: ` + blocked.map(x => `${PEOPLE[x.it.blocked.who].name.split(" ")[0]} on ${lowerFirst(x.it.blocked.on)} (${span(x.it.blocked.since)})`).join("; ") + ".");
+  if (unowned.length) out.push(`${unowned.length} open ${unowned.length === 1 ? "item has" : "items have"} no owner, led by “${unowned[0].it.title}”.`);
+  const closed = state.items.filter(i => status(i) === "done").length;
+  out.push(`So far today: ${closed} closed, ${allEvents().length} updates across ${Object.keys(SOURCES).length} tools.${state.outage ? " Jira did not sync, so Jira items may be out of date." : ""}`);
+  return out.join(" ");
+}
+async function askClaude() {
+  if (!sample || state.aiBusy) return;
+  state.aiBusy = true; render();
+  const data = ranked(openItems()).slice(0, 12).map(({ it, sc }) => ({ title: it.title, source: SOURCES[it.src], type: TYPE[it.type], owner: ownerName(it), due: it.due ? dueLabel(it.due) : null, score: sc.total, waitingOnManager: !!it.needsYou, blocked: it.blocked ? `${PEOPLE[it.blocked.who].name} blocked on ${it.blocked.on} for ${span(it.blocked.since)}` : null, customerImpact: it.impact || null }));
+  const prompt = `You write the morning brief inside WorkRadar, a tool for engineering managers. Using ONLY the JSON below (ranked open work items, highest priority first), write a brief of at most 90 words in plain text, no markdown, no lists. Cover in order: what the manager must do first and why, who is blocked on what and for how long, what has no owner, and one closing line on the release risk if any. Be specific and use names. Do not invent facts.\n\n${JSON.stringify(data)}`;
+  try { const res = await sample(prompt, { modelTier: "quick" }); state.ai = (res.text || "").trim() || null; }
+  catch (e) { toast(e && e.code === "rate_limited" ? "Claude is busy. Try again in a minute." : "Claude could not write the brief. Showing the built-in summary."); state.ai = null; }
+  state.aiBusy = false; render();
+}
+
+/* ---------- events ---------- */
+const allEvents = () => [...state.userEvents, ...EVENTS].sort((a, b) => b.at - a.at);
+const evHTML = e => `<button class="ev" data-act="open" data-id="${e.item}"><time>${esc(clock(e.at))}</time><span><b>${e.who ? esc(e.who === "you" ? "You" : PEOPLE[e.who].name.split(" ")[0]) + " " : ""}</b>${esc(e.text)} <span class="src">${ICON[e.src]}${SOURCES[e.src]}</span></span></button>`;
+
+/* ---------- views ---------- */
+function radarHTML(r) {
+  const quad = { slack: 180, jira: 270, github: 0, email: 90 }, per = {};
+  r.forEach(x => (per[x.it.src] = per[x.it.src] || []).push(x));
+  let dots = "";
+  for (const s in per) per[s].forEach((x, i) => {
+    const a = (quad[s] + 90 * (i + 1) / (per[s].length + 1)) * Math.PI / 180, rad = 18 + (1 - x.sc.total / 100) * 108;
+    const [k, label] = tierOf(x.sc.total), size = { crit: 7.5, high: 6.5, med: 5.5, low: 4.5 }[k];
+    dots += `<circle class="blip" tabindex="0" role="button" data-act="open" data-id="${x.it.id}" cx="${(150 + rad * Math.cos(a)).toFixed(1)}" cy="${(150 + rad * Math.sin(a)).toFixed(1)}" r="${size}" fill="var(--${k})" aria-label="${esc(x.it.title)}, ${label}, score ${x.sc.total}"><title>${esc(x.it.title)} · ${label} ${x.sc.total}</title></circle>`;
+  });
+  const lab = (x, y, t, anchor) => `<text x="${x}" y="${y}" text-anchor="${anchor}" font-family="var(--mono)" font-size="11" fill="var(--muted)">${t}</text>`;
+  return `<section class="panel radar"><header><h2>Radar</h2><span>closer to centre = more urgent</span></header>
+    <div class="radar-box"><div class="sweep"></div><svg viewBox="0 0 300 300" role="group" aria-label="Open items plotted by source and urgency">
+      ${[44, 86, 128].map(q => `<circle cx="150" cy="150" r="${q}" fill="none" stroke="var(--line)" stroke-width="1"/>`).join("")}
+      <path d="M150 22V278M22 150H278" stroke="var(--line)" stroke-width="1" fill="none"/>
+      ${lab(26, 30, "SLACK", "start")}${lab(274, 30, "JIRA", "end")}${lab(274, 282, "GITHUB", "end")}${lab(26, 282, "EMAIL", "start")}
+      <circle cx="150" cy="150" r="3" fill="var(--gold)"/>${dots}</svg></div>
+    <div class="radar-key"><span><i style="background:var(--crit)"></i>Critical</span><span><i style="background:var(--high)"></i>High</span><span><i style="background:var(--med)"></i>Medium</span><span><i style="background:var(--low)"></i>Low</span></div></section>`;
+}
+function dashboard() {
+  const r = ranked(openItems());
+  const needs = needsOf(r);
+  const work = r.filter(x => x.it.owner && !needs.includes(x) && x.it.type !== "fyi").slice(0, 5);
+  const blocked = r.filter(x => x.it.blocked);
+  const ev = allEvents();
+  const hello = new Date().getHours() < 12 ? "Good morning" : new Date().getHours() < 17 ? "Good afternoon" : "Good evening";
+  return `<div class="head"><div><p class="eyebrow">${esc(new Date().toLocaleDateString([], { weekday: "long", day: "numeric", month: "long" }))} · Checkout squad</p><h1>${hello}. Here is your team at a glance.</h1></div>
+      <p>${r.length} open items from 4 tools · demo data</p></div>
+    <div class="hero">
+      <section class="brief" aria-live="polite"><p class="eyebrow">${state.ai ? "Brief · written by Claude" : "Brief · auto-summary"}</p>
+        <p class="brief-text ${state.aiBusy ? "busy" : ""}">${esc(state.ai || localBrief())}</p>
+        <div class="brief-meta"><span>${state.ai ? "Written by Claude from the ranked items. Check details before acting." : "Built from the ranked items by fixed rules. Updates as you act."}</span>
+          ${sample ? `<button class="btn ghost sm" data-act="ai" ${state.aiBusy ? "disabled" : ""}>${state.aiBusy ? "Writing…" : state.ai ? "Rewrite with Claude" : "Write with Claude"}</button>` : ""}
+          ${state.ai ? '<button class="btn ghost sm" data-act="ai-clear">Show auto-summary</button>' : ""}</div></section>
+      ${radarHTML(r)}</div>
+    <div class="grid2">
+      <section class="panel"><header><h2>Needs you now</h2><span>${needs.length} waiting on a decision, review or owner</span></header><div class="rows">${needs.length ? needs.slice(0, 6).map(x => rowHTML(x)).join("") : empty("Nothing is waiting on you", "Decisions, reviews and unowned risks will appear here.")}</div></section>
+      <section class="panel"><header><h2>Top work today</h2><span>what the team is carrying, ranked</span></header><div class="rows">${work.length ? work.map((x, i) => rowHTML(x, i + 1)).join("") : empty("No active work", "Assigned items will be ranked here.")}</div></section>
+      <section class="panel"><header><h2>Who is blocked</h2><span>${blocked.length} of 6 people</span></header><div class="rows">${blocked.length ? blocked.map(x => `<button class="row" data-act="open" data-id="${x.it.id}">${av(x.it.blocked.who)}<span><span class="t">${esc(PEOPLE[x.it.blocked.who].name)}</span><span class="s"><span>Waiting on: ${esc(x.it.blocked.on)}</span></span></span><span class="pill ${(Date.now() - x.it.blocked.since) / H > 24 ? "t-crit" : "t-high"}">${span(x.it.blocked.since)}</span></button>`).join("") : empty("Nobody is blocked", "When someone is waiting on a person, access or decision, they show up here.")}</div></section>
+      <section class="panel"><header><h2>What happened today</h2><span>${ev.length} updates</span></header><div class="rows">${ev.slice(0, 7).map(evHTML).join("")}</div></section>
+    </div>
+    <div class="mobile-tools"><button class="linkbtn" data-act="outage">${state.outage ? "Restore Jira" : "Simulate Jira outage"}</button><button class="linkbtn" data-act="reset">Reset demo data</button></div>`;
+}
+function feed() {
+  const f = state.feed;
+  let list = state.items.filter(i => status(i) === f.status);
+  if (f.src !== "all") list = list.filter(i => i.src === f.src);
+  if (f.lens === "needs") list = list.filter(i => i.needsYou); if (f.lens === "blocked") list = list.filter(i => i.blocked); if (f.lens === "unowned") list = list.filter(i => !i.owner);
+  const r = ranked(list), cnt = s => state.items.filter(i => status(i) === s).length;
+  const chip = (group, val, label) => `<button class="chip" data-act="filter" data-group="${group}" data-val="${val}" aria-pressed="${f[group] === val}">${label}</button>`;
+  let body;
+  if (state.outage && f.src === "jira") body = empty("Jira did not sync", "WorkRadar could not reach Jira at the last refresh, so there is nothing reliable to rank here. Your Jira connection may have expired.", '<button class="btn primary" data-act="retry">Try again</button>', true);
+  else if (!r.length) body = f.status === "open" && f.lens === "all" && f.src === "all" ? empty("The radar is clear", "Every item is done or snoozed. New items appear here as your tools report them.") : empty("Nothing matches these filters", "Try a different lens or source.", '<button class="btn" data-act="clear-filters">Clear filters</button>');
+  else body = r.map(x => cardHTML(x)).join("");
+  return `<div class="head"><div><p class="eyebrow">One ranked list across Slack, Jira, GitHub and Email</p><h1>Priority feed</h1></div><p>Ranked by a visible score. Open any item to see why.</p></div>
+    <div class="toolbar"><div class="chips" role="group" aria-label="Status">${chip("status", "open", `Open ${cnt("open")}`)}${chip("status", "snoozed", `Snoozed ${cnt("snoozed")}`)}${chip("status", "done", `Done ${cnt("done")}`)}</div>
+      <div class="chips" role="group" aria-label="Lens">${chip("lens", "all", "All")}${chip("lens", "needs", "Needs me")}${chip("lens", "blocked", "Blocked")}${chip("lens", "unowned", "No owner")}</div>
+      <div class="chips" role="group" aria-label="Source">${chip("src", "all", "All tools")}${Object.entries(SOURCES).map(([k, v]) => chip("src", k, v)).join("")}</div></div>
+    <section class="panel">${body}</section>`;
+}
+function hay(it) { return [it.id, it.title, it.body, it.ref, SOURCES[it.src], TYPE[it.type], ownerName(it), it.owner ? "" : "unassigned", it.blocked ? "blocked " + it.blocked.on : "", it.impact || "", status(it), it.digest].join(" ").toLowerCase(); }
+function searchResults() {
+  const q = state.q.trim().toLowerCase(), toks = q.split(/\s+/).filter(Boolean);
+  if (!toks.length) return `<div class="empty"><b>Search every tool at once</b><span>Find a ticket, a person, a release or a phrase across all four tools, including done and snoozed items.</span><div class="chips">${["refund", "blocked", "Rohan", "4.12", "PAY-490", "unassigned"].map(t => `<button class="chip" data-act="try" data-q="${t}">${t}</button>`).join("")}</div></div>`;
+  let list = state.items.filter(it => { const h = hay(it); return toks.every(t => h.includes(t)); });
+  if (state.qsrc !== "all") list = list.filter(i => i.src === state.qsrc);
+  if (!list.length) return empty(`No results for “${esc(state.q)}”`, "Check the spelling, try a ticket number like PAY-482, or search a person's name.", state.qsrc !== "all" ? '<button class="btn" data-act="qsrc" data-val="all">Search all tools</button>' : "");
+  const re = new RegExp("(" + toks.map(t => esc(t).replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|") + ")", "gi");
+  const hl = s => esc(s).replace(re, "<mark>$1</mark>");
+  return `<p class="eyebrow" style="padding:12px 16px 8px">${list.length} result${list.length === 1 ? "" : "s"}, most urgent first</p>` + ranked(list).map(x => cardHTML(x, hl)).join("");
+}
+function search() {
+  return `<div class="head"><div><p class="eyebrow">Slack · Jira · GitHub · Email</p><h1>Search</h1></div></div>
+    <label class="searchbar">${ICON.search}<input id="q" type="search" placeholder="Search tickets, people, releases…" value="${esc(state.q)}" autocomplete="off" aria-label="Search all items"></label>
+    <div class="chips" id="qchips">${qchips()}</div>
+    <section class="panel" id="results">${searchResults()}</section>`;
+}
+const qchips = () => [["all", "All tools"], ...Object.entries(SOURCES)].map(([k, v]) => `<button class="chip" data-act="qsrc" data-val="${k}" aria-pressed="${state.qsrc === k}">${v}</button>`).join("");
+function detail() {
+  const it = byId(state.itemId);
+  if (!it) return `<button class="btn" data-act="nav" data-view="feed" style="align-self:flex-start">← Back</button><section class="panel">${empty("This item could not be found", "It may have been removed from its source tool.", "", true)}</section>`;
+  const sc = score(it), [k, label] = tierOf(sc.total), names = { dashboard: "Dashboard", feed: "Priority feed", search: "Search" };
+  return `<button class="btn" data-act="nav" data-view="${state.back}" style="align-self:flex-start">← ${names[state.back]}</button>
+    <div class="detail">
+      <section class="panel">
+        <div class="sec"><div style="display:flex;gap:6px 10px;flex-wrap:wrap;align-items:center">${srcTag(it)}<span class="pill t-${k}">${label} · ${sc.total}</span><span class="pill t-low">${TYPE[it.type]}</span>${statePill(it)}</div>
+          <h1>${esc(it.title)}</h1><p style="color:var(--muted)">${esc(it.body)}</p>${actsHTML(it)}</div>
+        <div class="sec"><h3>AI digest of the thread</h3><p class="digest">${esc(it.digest)}</p><p style="font-size:12.5px;color:var(--muted)">Sample digest for the demo. In production this is generated from the source thread.</p></div>
+        <div class="sec"><h3>Suggested next step</h3><p class="next">${esc(it.next)}</p></div>
+        <div class="sec"><h3>Thread · ${it.thread.length} updates</h3>${it.thread.map(m => `<div class="msg">${av(m.who)}<div class="m"><small>${esc(m.who === "you" ? "Inbox" : PEOPLE[m.who].name)} · ${esc(rel(m.at))}</small>${esc(m.text)}</div></div>`).join("")}</div>
+      </section>
+      <div style="display:flex;flex-direction:column;gap:20px;min-width:0">
+        <section class="panel"><div class="sec"><h3>Details</h3><dl class="kv" style="margin:0"><dt>Owner</dt><dd>${esc(ownerName(it))}</dd><dt>Due</dt><dd>${esc(dueLabel(it.due))}</dd><dt>Source</dt><dd>${esc(SOURCES[it.src])} · ${esc(it.ref)}</dd>${it.blocked ? `<dt>Blocked on</dt><dd>${esc(it.blocked.on)} (${span(it.blocked.since)})</dd>` : ""}${it.impact ? `<dt>Impact</dt><dd>${esc(it.impact)}</dd>` : ""}<dt>Updated</dt><dd>${esc(rel(it.updated))}</dd><dt>ID</dt><dd style="font-family:var(--mono);font-size:13px">${it.id}</dd></dl></div></section>
+        <section class="panel"><div class="sec"><h3>Why it is ranked here</h3>${sc.factors.map(f => `<div class="factor"><span>${esc(f.label)}</span><b>+${f.pts}</b></div>`).join("")}<div class="bar" aria-hidden="true"><i style="width:${sc.total}%"></i></div><div class="factor"><span>Priority score (max 99)</span><b>${sc.total}</b></div></div></section>
+      </div></div>`;
+}
+function rail() {
+  const n = openItems().length;
+  const nav = [["dashboard", "Dashboard"], ["feed", "Priority feed"], ["search", "Search"]].map(([v, l]) => `<button data-act="nav" data-view="${v}" ${state.view === v || (state.view === "detail" && state.back === v) ? 'aria-current="page"' : ""}>${ICON[v]}<span>${l}</span>${v === "feed" ? `<span class="count">${n}</span>` : ""}</button>`).join("");
+  return `<div class="brand"><svg width="26" height="26" viewBox="0 0 26 26" fill="none"><circle cx="13" cy="13" r="11.5" stroke="var(--gold)" stroke-width="1.6"/><circle cx="13" cy="13" r="6" stroke="var(--rail-muted)" stroke-width="1.2"/><path d="M13 13 21 6.5" stroke="var(--gold)" stroke-width="1.8" stroke-linecap="round"/><circle cx="13" cy="13" r="1.8" fill="var(--gold)"/></svg><b>WorkRadar</b></div>
+    <nav class="nav" aria-label="Main">${nav}</nav>
+    <div class="rail-foot"><div class="srcs">${Object.entries(SOURCES).map(([k, v]) => `<span><i class="dot ${state.outage && k === "jira" ? "bad" : ""}"></i>${v} ${state.outage && k === "jira" ? "sync failed" : "synced"}</span>`).join("")}</div>
+      <button class="linkbtn" data-act="outage">${state.outage ? "Restore Jira" : "Simulate Jira outage"}</button><button class="linkbtn" data-act="reset">Reset demo data</button>
+      <div class="who">${av("you")}<span>Priya Menon<small>Engineering Manager</small></span></div></div>`;
+}
+function render() {
+  $("#rail").innerHTML = rail();
+  const banner = state.outage ? `<div class="banner" role="alert"><span><b>Jira did not sync.</b> Jira items below are a cached copy and may be out of date.</span><button class="btn sm" data-act="retry">Try again</button></div>` : "";
+  $("#view").innerHTML = banner + ({ dashboard, feed, search, detail }[state.view])();
+  $("#toast").innerHTML = state.toast ? `<div class="toast" role="status"><span>${esc(state.toast.msg)}</span>${state.toast.undo ? '<button data-act="undo">Undo</button>' : ""}</div>` : "";
+}
+function go(view, id) {
+  if (view === "detail") { if (state.view !== "detail") state.back = state.view; state.itemId = id; }
+  state.view = view; state.menu = null;
+  try { history.replaceState(null, "", "#" + (view === "detail" ? "item-" + id : view)); } catch (e) { /* hash is optional */ }
+  render(); window.scrollTo(0, 0);
+  if (view === "search") $("#q")?.focus();
+}
+
+/* ---------- actions ---------- */
+let toastTimer;
+function toast(msg, undo) { state.toast = { msg, undo }; clearTimeout(toastTimer); toastTimer = setTimeout(() => { state.toast = null; render(); }, 6000); }
+function act(it, change, msg, evText) {
+  const prev = { id: it.id, status: it.status, owner: it.owner, snoozeUntil: it.snoozeUntil, ev: state.userEvents.length };
+  Object.assign(it, change);
+  if (evText) state.userEvents.push({ at: Date.now(), src: it.src, who: "you", text: evText, item: it.id });
+  state.ai = null; state.menu = null; save(); toast(msg, prev); render();
+}
+function snoozeUntil(k) { if (k === "1h") return Date.now() + H; if (k === "tom") return todayAt(9, 0, 1); const d = new Date(); const add = ((8 - d.getDay()) % 7) || 7; return todayAt(9, 0, add); }
+
+document.addEventListener("click", e => {
+  const el = e.target.closest("[data-act]");
+  if (!el) { if (state.menu) { state.menu = null; render(); } return; }
+  const a = el.dataset.act, it = el.dataset.id ? byId(el.dataset.id) : null;
+  if (a === "open") return go("detail", el.dataset.id);
+  if (a === "nav") return go(el.dataset.view);
+  if (a === "menu") { state.menu = state.menu && state.menu.id === it.id && state.menu.kind === el.dataset.kind ? null : { id: it.id, kind: el.dataset.kind }; return render(); }
+  if (a === "assign") { const who = el.dataset.who; return act(it, { owner: who }, `Assigned to ${who === "you" ? "you" : PEOPLE[who].name}`, `assigned “${it.title}” to ${who === "you" ? "yourself" : PEOPLE[who].name}`); }
+  if (a === "done") return act(it, { status: "done" }, "Marked done", `marked “${it.title}” done`);
+  if (a === "snooze") { const until = snoozeUntil(el.dataset.for); return act(it, { status: "snoozed", snoozeUntil: until }, `Snoozed until ${new Date(until).toLocaleString([], { weekday: "short", hour: "numeric", minute: "2-digit" })}`, `snoozed “${it.title}”`); }
+  if (a === "reopen") return act(it, { status: "open", snoozeUntil: null }, "Back in the feed", `reopened “${it.title}”`);
+  if (a === "undo") { const p = state.toast.undo, t = byId(p.id); Object.assign(t, { status: p.status, owner: p.owner, snoozeUntil: p.snoozeUntil }); state.userEvents.length = p.ev; state.toast = null; save(); return render(); }
+  if (a === "filter") { state.feed[el.dataset.group] = el.dataset.val; return render(); }
+  if (a === "clear-filters") { state.feed = { status: "open", lens: "all", src: "all" }; return render(); }
+  if (a === "qsrc") { state.qsrc = el.dataset.val; $("#qchips").innerHTML = qchips(); $("#results").innerHTML = searchResults(); return; }
+  if (a === "try") { state.q = el.dataset.q; render(); return $("#q")?.focus(); }
+  if (a === "outage") { state.outage = !state.outage; toast(state.outage ? "Simulating a failed Jira sync" : "Jira restored"); return render(); }
+  if (a === "retry") { state.outage = false; toast("Jira synced. Items are up to date."); return render(); }
+  if (a === "reset") { try { localStorage.removeItem(STORE); } catch (err) { /* ignore */ } state.items = SEED.map(i => ({ status: "open", snoozeUntil: null, ...i })); state.userEvents = []; state.ai = null; state.outage = false; toast("Demo data reset"); return render(); }
+  if (a === "ai") return askClaude();
+  if (a === "ai-clear") { state.ai = null; return render(); }
+});
+document.addEventListener("input", e => { if (e.target.id === "q") { state.q = e.target.value; $("#results").innerHTML = searchResults(); } });
+document.addEventListener("keydown", e => {
+  if (e.key === "/" && !/input|textarea|select/i.test(document.activeElement.tagName)) { e.preventDefault(); go("search"); }
+  if (e.key === "Escape" && state.menu) { state.menu = null; render(); }
+  if ((e.key === "Enter" || e.key === " ") && e.target.classList?.contains("blip")) { e.preventDefault(); go("detail", e.target.dataset.id); }
+});
+
+/* ---------- boot ---------- */
+load();
+const h = (location.hash || "").slice(1);
+if (h.startsWith("item-") && byId(h.slice(5))) { state.view = "detail"; state.itemId = h.slice(5); state.back = "feed"; } else if (["feed", "search"].includes(h)) state.view = h;
+render();
+/* Optional: inside Claude, a real model can write the brief. Elsewhere the rule-based summary stays. */
+if (window.claude && typeof window.claude.use === "function") window.claude.use("sample").then(s => { if (s) { sample = s; render(); } }).catch(() => {});
+})();
+</script>
+</body></html>
